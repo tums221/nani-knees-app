@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { ChevronLeft, ChevronRight, Play, Pause, RotateCcw, Check, Clock, Dumbbell, Home, Calendar, Heart, BookOpen, Plus, Minus, X, ChevronDown, ChevronUp, Award, TrendingUp, Flame } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, Pause, RotateCcw, Check, Clock, Dumbbell, Home, Calendar, Heart, BookOpen, Plus, Minus, X, ChevronDown, ChevronUp, Award, TrendingUp, Flame, Settings, AlertTriangle } from "lucide-react";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // DESIGN TOKENS — warm terracotta, cream, blush palette from the ebook
@@ -1834,6 +1834,349 @@ const BigStat = ({ label, value, unit, color, icon }) => (
 );
 
 // ═══════════════════════════════════════════════════════════════════════════
+// SETTINGS VIEW — reset data, view app info
+// ═══════════════════════════════════════════════════════════════════════════
+const SettingsView = ({ data, onResetProgress, onClearAll }) => {
+  const [confirmType, setConfirmType] = useState(null); // 'progress' | 'all' | null
+
+  const completedCount = Object.keys(data.completedWorkouts || {}).length;
+
+  return (
+    <div style={{ padding: "28px 22px 120px", maxWidth: 560, margin: "0 auto" }}>
+      {/* Header */}
+      <div style={{ marginBottom: 32 }}>
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.2em",
+            color: PALETTE.terracotta,
+            marginBottom: 10,
+          }}
+        >
+          SETTINGS
+        </div>
+        <div
+          style={{
+            fontSize: 34,
+            fontWeight: 300,
+            fontStyle: "italic",
+            letterSpacing: "-0.02em",
+            color: PALETTE.ink,
+            lineHeight: 1.1,
+          }}
+        >
+          Your <span style={{ color: PALETTE.terracotta }}>preferences</span>
+        </div>
+      </div>
+
+      {/* Stats summary */}
+      <div
+        style={{
+          background: "white",
+          borderRadius: 14,
+          padding: 20,
+          marginBottom: 22,
+          border: `1px solid ${PALETTE.sand}`,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: "0.18em",
+            color: PALETTE.mocha,
+            marginBottom: 12,
+          }}
+        >
+          YOUR DATA
+        </div>
+        <div style={{ display: "flex", gap: 24 }}>
+          <div>
+            <div style={{ fontSize: 28, fontWeight: 700, color: PALETTE.ink }}>
+              {data.currentWeek}
+            </div>
+            <div
+              style={{
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: "0.1em",
+                color: PALETTE.mocha,
+                textTransform: "uppercase",
+                marginTop: 2,
+              }}
+            >
+              Current Week
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 28, fontWeight: 700, color: PALETTE.ink }}>
+              {completedCount}
+            </div>
+            <div
+              style={{
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: "0.1em",
+                color: PALETTE.mocha,
+                textTransform: "uppercase",
+                marginTop: 2,
+              }}
+            >
+              Workouts Logged
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Reset progress card */}
+      <div
+        style={{
+          background: "white",
+          borderRadius: 14,
+          padding: 20,
+          marginBottom: 14,
+          border: `1px solid ${PALETTE.sand}`,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 14 }}>
+          <div
+            style={{
+              background: PALETTE.blushSoft,
+              borderRadius: 10,
+              padding: 10,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <RotateCcw size={18} color={PALETTE.terracottaDark} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div
+              style={{
+                fontSize: 15,
+                fontWeight: 700,
+                color: PALETTE.ink,
+                marginBottom: 4,
+              }}
+            >
+              Start Phase 1 over
+            </div>
+            <div style={{ fontSize: 13, color: PALETTE.mocha, lineHeight: 1.5 }}>
+              Clears all logged workouts and sends you back to Week 1. Use this
+              when you finish the 12 weeks and want to run the program again.
+            </div>
+          </div>
+        </div>
+        <button
+          onClick={() => setConfirmType("progress")}
+          style={{
+            width: "100%",
+            padding: "12px 16px",
+            background: PALETTE.cream,
+            color: PALETTE.terracottaDark,
+            border: `1px solid ${PALETTE.sand}`,
+            borderRadius: 10,
+            fontWeight: 700,
+            fontSize: 12,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            cursor: "pointer",
+          }}
+        >
+          Restart from Week 1
+        </button>
+      </div>
+
+      {/* Clear all data card */}
+      <div
+        style={{
+          background: "white",
+          borderRadius: 14,
+          padding: 20,
+          marginBottom: 22,
+          border: `1px solid ${PALETTE.sand}`,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 14 }}>
+          <div
+            style={{
+              background: PALETTE.redSoft,
+              borderRadius: 10,
+              padding: 10,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <AlertTriangle size={18} color={PALETTE.red} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div
+              style={{
+                fontSize: 15,
+                fontWeight: 700,
+                color: PALETTE.ink,
+                marginBottom: 4,
+              }}
+            >
+              Clear all data
+            </div>
+            <div style={{ fontSize: 13, color: PALETTE.mocha, lineHeight: 1.5 }}>
+              Wipes every set, every note, every setting from this device.
+              This cannot be undone.
+            </div>
+          </div>
+        </div>
+        <button
+          onClick={() => setConfirmType("all")}
+          style={{
+            width: "100%",
+            padding: "12px 16px",
+            background: "white",
+            color: PALETTE.red,
+            border: `1px solid ${PALETTE.redSoft}`,
+            borderRadius: 10,
+            fontWeight: 700,
+            fontSize: 12,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            cursor: "pointer",
+          }}
+        >
+          Clear all data
+        </button>
+      </div>
+
+      {/* About */}
+      <div
+        style={{
+          padding: "16px 4px",
+          textAlign: "center",
+          fontSize: 11,
+          color: PALETTE.mocha,
+          lineHeight: 1.6,
+        }}
+      >
+        <div style={{ fontStyle: "italic", marginBottom: 4 }}>Nani's Knees</div>
+        <div style={{ opacity: 0.6 }}>Your progress stays private on this device.</div>
+      </div>
+
+      {/* Confirm modal */}
+      {confirmType && (
+        <div
+          onClick={() => setConfirmType(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(28, 20, 16, 0.55)",
+            backdropFilter: "blur(4px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 20,
+            zIndex: 1000,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "white",
+              borderRadius: 16,
+              padding: 28,
+              maxWidth: 380,
+              width: "100%",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.2em",
+                color: confirmType === "all" ? PALETTE.red : PALETTE.terracotta,
+                marginBottom: 10,
+              }}
+            >
+              {confirmType === "all" ? "CLEAR ALL DATA" : "RESTART PROGRAM"}
+            </div>
+            <div
+              style={{
+                fontSize: 19,
+                fontWeight: 600,
+                color: PALETTE.ink,
+                marginBottom: 12,
+                lineHeight: 1.3,
+              }}
+            >
+              {confirmType === "all"
+                ? "Are you sure? This can't be undone."
+                : "Start Phase 1 from the beginning?"}
+            </div>
+            <div style={{ fontSize: 13, color: PALETTE.mocha, lineHeight: 1.5, marginBottom: 22 }}>
+              {confirmType === "all"
+                ? "Every set, note, and setting will be wiped from this device. Your Whop subscription and ebook access are not affected."
+                : `You'll lose ${completedCount} logged workout${
+                    completedCount === 1 ? "" : "s"
+                  } and go back to Week 1. Your notes will stay.`}
+            </div>
+            <div style={{ display: "flex", gap: 10 }}>
+              <button
+                onClick={() => setConfirmType(null)}
+                style={{
+                  flex: 1,
+                  padding: "13px",
+                  background: PALETTE.cream,
+                  color: PALETTE.ink,
+                  border: `1px solid ${PALETTE.sand}`,
+                  borderRadius: 10,
+                  fontWeight: 700,
+                  fontSize: 12,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  if (confirmType === "all") {
+                    onClearAll();
+                  } else {
+                    onResetProgress();
+                  }
+                  setConfirmType(null);
+                }}
+                style={{
+                  flex: 1,
+                  padding: "13px",
+                  background: confirmType === "all" ? PALETTE.red : PALETTE.terracotta,
+                  color: "white",
+                  border: "none",
+                  borderRadius: 10,
+                  fontWeight: 700,
+                  fontSize: 12,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                }}
+              >
+                {confirmType === "all" ? "Yes, wipe it" : "Restart"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+// ═══════════════════════════════════════════════════════════════════════════
 // MAIN APP
 // ═══════════════════════════════════════════════════════════════════════════
 export default function NaniApp() {
@@ -1872,6 +2215,28 @@ export default function NaniApp() {
   const updateSets = (workoutKey, state) => {
     const newCompleted = { ...data.completedWorkouts, [workoutKey]: state };
     updateData({ completedWorkouts: newCompleted });
+  };
+
+  // Reset back to week 1, clear workouts, keep everything else
+  const resetProgress = () => {
+    updateData({ currentWeek: 1, completedWorkouts: {} });
+    setTab("home");
+  };
+
+  // Full wipe — remove all data and reload with fresh defaults
+  const clearAllData = () => {
+    try {
+      localStorage.removeItem("nani-knees-workout-data");
+    } catch (e) {}
+    const fresh = {
+      currentWeek: 1,
+      completedWorkouts: {},
+      exerciseLog: {},
+      settings: { restBeepEnabled: true },
+    };
+    setData(fresh);
+    saveData(fresh);
+    setTab("home");
   };
 
   const openWorkout = (dayKey) => {
@@ -1921,6 +2286,14 @@ export default function NaniApp() {
         />
       )}
 
+      {view === "home" && tab === "settings" && (
+        <SettingsView
+          data={data}
+          onResetProgress={resetProgress}
+          onClearAll={clearAllData}
+        />
+      )}
+
       {/* Bottom nav (only when in home view) */}
       {view === "home" && (
         <div
@@ -1939,6 +2312,7 @@ export default function NaniApp() {
         >
           <NavButton icon={<Home size={22} />} label="Home" active={tab === "home"} onClick={() => setTab("home")} />
           <NavButton icon={<TrendingUp size={22} />} label="Progress" active={tab === "progress"} onClick={() => setTab("progress")} />
+          <NavButton icon={<Settings size={22} />} label="Settings" active={tab === "settings"} onClick={() => setTab("settings")} />
         </div>
       )}
     </div>
